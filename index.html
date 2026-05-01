@@ -293,6 +293,7 @@
     position: relative; z-index: 2;
     width: 100%; height: 100%;
   }
+  .product-ring {
     position: absolute; border-radius: 50%;
     border: 1px solid rgba(196,153,59,0.12);
     animation: spin 25s linear infinite;
@@ -1100,6 +1101,131 @@
     grid-column: span 2;
   }
 
+  /* PARALLAX SYSTEM */
+  .parallax {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .parallax-layer {
+    position: absolute;
+    top: -20%; left: -2%; right: -2%;
+    height: 140%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
+    z-index: 0;
+  }
+  .parallax-overlay {
+    position: absolute; inset: 0;
+    z-index: 1;
+    background:
+      radial-gradient(ellipse 60% 80% at 50% 50%, rgba(107,0,0,0.35) 0%, transparent 70%),
+      linear-gradient(180deg, rgba(26,0,5,0.55) 0%, rgba(13,0,3,0.85) 100%);
+  }
+  .parallax > .parallax-content,
+  .parallax > .channel-card-inner,
+  .parallax > .product-info {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* PARALLAX HERO */
+  .hero-parallax {
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-end;
+    padding: 160px 60px 100px;
+  }
+  .hero-parallax .parallax-overlay {
+    background:
+      radial-gradient(ellipse 70% 90% at 30% 60%, rgba(107,0,0,0.5) 0%, transparent 70%),
+      linear-gradient(120deg, rgba(13,0,3,0.92) 0%, rgba(26,0,5,0.7) 45%, rgba(26,0,5,0.55) 100%);
+  }
+  .hero-parallax-content {
+    position: relative; z-index: 2;
+    max-width: 720px;
+  }
+  .hero-parallax-stats {
+    position: absolute; right: 60px; bottom: 80px;
+    z-index: 2; display: flex; gap: 56px;
+    animation: fadeUp 0.8s 0.8s both;
+  }
+  .hero-parallax-stats .hero-stat { text-align: right; }
+  .hero-parallax-scroll {
+    position: absolute; left: 60px; bottom: 32px;
+    z-index: 2;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--cream); opacity: 0.5;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .hero-parallax-scroll::before {
+    content: ''; display: block;
+    width: 32px; height: 1px; background: var(--gold);
+    animation: scrollPulse 2.4s ease-in-out infinite;
+  }
+  @keyframes scrollPulse {
+    0%, 100% { transform: scaleX(0.4); transform-origin: left; opacity: 0.4; }
+    50%      { transform: scaleX(1); transform-origin: left; opacity: 1; }
+  }
+
+  /* PARALLAX DIVIDER STRIPS (between sections) */
+  .parallax-divider {
+    height: 70vh;
+    min-height: 480px;
+    display: flex;
+    align-items: center;
+    padding: 0 60px;
+  }
+  .parallax-divider .parallax-content {
+    max-width: 640px;
+  }
+  .parallax-divider-eyebrow {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; font-weight: 500; letter-spacing: 0.3em;
+    text-transform: uppercase; color: var(--gold);
+    margin-bottom: 24px;
+  }
+  .parallax-divider-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 4vw, 64px);
+    font-weight: 300; line-height: 1.1; color: var(--white);
+  }
+  .parallax-divider-text em { color: var(--gold); font-style: italic; }
+  .parallax-divider-attr {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; font-weight: 500; letter-spacing: 0.25em;
+    text-transform: uppercase; color: var(--cream); opacity: 0.55;
+    margin-top: 32px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .parallax-divider-attr::before {
+    content: ''; display: block;
+    width: 32px; height: 1px; background: var(--gold);
+  }
+  .parallax-divider.align-right { justify-content: flex-end; text-align: right; }
+  .parallax-divider.align-right .parallax-divider-attr {
+    justify-content: flex-end;
+  }
+  .parallax-divider.align-right .parallax-divider-attr::before { display: none; }
+  .parallax-divider.align-right .parallax-divider-attr::after {
+    content: ''; display: block;
+    width: 32px; height: 1px; background: var(--gold);
+  }
+
+  /* MOBILE — drop the parallax weight, keep the imagery */
+  @media (max-width: 720px) {
+    .parallax-layer { transform: none !important; top: 0; height: 100%; }
+    .hero-parallax-stats { display: none; }
+    .parallax-divider { height: auto; padding: 100px 32px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .parallax-layer { transform: none !important; }
+  }
+
 </style>
 </head>
 <body>
@@ -1116,14 +1242,15 @@
   <button class="nav-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Request Pricing</button>
 </nav>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-left">
+<!-- HERO — full-bleed parallax -->
+<section class="hero-parallax parallax">
+  <div class="parallax-layer" data-parallax="0.35" style="background-image:url('images/hero-bg.jpg');"></div>
+  <div class="parallax-overlay"></div>
+  <div class="hero-parallax-content">
     <div class="hero-eyebrow">Clean Label Protein for Institutional Foodservice</div>
     <h1 class="hero-headline">
       Meat that Satisfies.<br>
-      <em>Made from mushrooms.</em><br>
-      
+      <em>Made from mushrooms.</em>
     </h1>
     <p class="hero-subhead">
       The richness, the texture, the satisfaction of meat — made from mushrooms. Clean label, minimally processed, no artificial ingredients, low sodium. Built for the volumes your operation demands.
@@ -1133,25 +1260,17 @@
       <a href="#channels" class="btn-ghost">Our Channels</a>
     </div>
   </div>
-  <div class="hero-right">
-    <div class="hero-visual">
-      <div class="hero-bg-img"></div>
-      <div class="hero-circle hero-circle-1"></div>
-      <div class="hero-circle hero-circle-2"></div>
-      <div class="hero-circle hero-circle-3"></div>
+  <div class="hero-parallax-stats">
+    <div class="hero-stat">
+      <div class="hero-stat-num">1:1</div>
+      <div class="hero-stat-label">Cost Parity vs Animal Protein</div>
     </div>
-      <div class="hero-divider"></div>
-      <div class="hero-stat">
-        <div class="hero-stat-num">1:1</div>
-        <div class="hero-stat-label">Save on Costs vs Animal Protein</div>
-      </div>
-      <div class="hero-divider"></div>
-      <div class="hero-stat">
-        <div class="hero-stat-num">4</div>
-        <div class="hero-stat-label">Institutional Channels</div>
-      </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">4</div>
+      <div class="hero-stat-label">Institutional Channels</div>
     </div>
   </div>
+  <div class="hero-parallax-scroll">Scroll</div>
 </section>
 
 <!-- TICKER -->
@@ -1217,10 +1336,21 @@
   </div>
 </section>
 
+<!-- PARALLAX DIVIDER — flavor-first -->
+<section class="parallax-divider parallax">
+  <div class="parallax-layer" data-parallax="0.3" style="background-image:url('images/parallax-grilled.jpg');"></div>
+  <div class="parallax-overlay"></div>
+  <div class="parallax-content">
+    <div class="parallax-divider-eyebrow">Flavor First</div>
+    <p class="parallax-divider-text">Char marks. Fibrous bite. <em>Umami you can taste through the menu.</em></p>
+    <div class="parallax-divider-attr">Grilled · Braised · Sautéed</div>
+  </div>
+</section>
+
 <!-- PRODUCT FEATURE -->
 <section class="product-section">
-  <div class="product-visual">
-    <div class="product-visual-img"></div>
+  <div class="product-visual parallax">
+    <div class="parallax-layer" data-parallax="0.2" style="background-image:url('images/product-feature.jpg'); opacity:0.55; mix-blend-mode:luminosity;"></div>
     <div class="product-visual-overlay"></div>
     <div class="product-visual-inner">
       <div class="product-ring ring-1"></div>
@@ -1304,6 +1434,17 @@
   </div>
 </section>
 
+<!-- PARALLAX DIVIDER — service at scale -->
+<section class="parallax-divider parallax align-right">
+  <div class="parallax-layer" data-parallax="0.3" style="background-image:url('images/parallax-tray.jpg');"></div>
+  <div class="parallax-overlay"></div>
+  <div class="parallax-content">
+    <div class="parallax-divider-eyebrow">Built for Volume</div>
+    <p class="parallax-divider-text">From <em>one tray</em> to <em>fifty thousand meals.</em></p>
+    <div class="parallax-divider-attr">Designed for institutional throughput</div>
+  </div>
+</section>
+
 <!-- METRICS -->
 <section class="metrics-section">
   <div class="metric-item reveal">
@@ -1330,6 +1471,17 @@
   <div>
     <p class="quote-text reveal">Diners don't think about what they're not eating. They think about whether they're satisfied. We built Superhumn to win on that — flavor first, clean label second, and a story worth telling.</p>
     <div class="quote-attr reveal reveal-delay-1">Jade Cheng, Founder &amp; CEO, Superhumn</div>
+  </div>
+</section>
+
+<!-- PARALLAX DIVIDER — clean ingredients -->
+<section class="parallax-divider parallax">
+  <div class="parallax-layer" data-parallax="0.3" style="background-image:url('images/parallax-mushrooms.jpg');"></div>
+  <div class="parallax-overlay"></div>
+  <div class="parallax-content">
+    <div class="parallax-divider-eyebrow">Whole Mushroom Structure</div>
+    <p class="parallax-divider-text">Five ingredients you can <em>read out loud.</em></p>
+    <div class="parallax-divider-attr">Minimally processed · No artificial additives</div>
   </div>
 </section>
 
@@ -1665,6 +1817,47 @@
       if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
     });
   });
+
+  // Parallax engine — only animates layers near the viewport, throttled via rAF.
+  (function() {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isNarrow = window.matchMedia('(max-width: 720px)').matches;
+    if (reduceMotion || isNarrow) return;
+
+    const layers = Array.from(document.querySelectorAll('[data-parallax]')).map(el => ({
+      el,
+      speed: parseFloat(el.dataset.parallax) || 0.3,
+      parent: el.parentElement,
+    }));
+    if (!layers.length) return;
+
+    const vh = () => window.innerHeight;
+    let pending = false;
+
+    function update() {
+      pending = false;
+      const viewportH = vh();
+      for (const layer of layers) {
+        const rect = layer.parent.getBoundingClientRect();
+        if (rect.bottom < -200 || rect.top > viewportH + 200) continue;
+        // Anchor 0 when the section center is at viewport center.
+        const sectionCenter = rect.top + rect.height / 2;
+        const offset = (viewportH / 2 - sectionCenter) * layer.speed;
+        layer.el.style.transform = `translate3d(0, ${offset.toFixed(1)}px, 0)`;
+      }
+    }
+
+    function onScroll() {
+      if (!pending) {
+        pending = true;
+        requestAnimationFrame(update);
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    update();
+  })();
 </script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
